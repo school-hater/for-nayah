@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pink Dreams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Quicksand:wght@500;700&display=swap">
+<style>
+/* Layout: one long soft-pink scroll. Hero with floating hearts, a sticky-scrolling story, a horizontal snap row of cards, a sticker wall, a closing note. */
+:root {
+  --bg: #fff0f5;
+  --bg-2: #ffe0ec;
+  --bg-3: #ffd0e2;
+  --ink: #6b1d45;
+  --ink-soft: #a24a75;
+  --pink: #ff6fa5;
+  --hot: #ff3d8b;
+  --cream: #fffafc;
+  --lilac: #d9b8ff;
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --font-body: "Quicksand", "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  overflow-x: hidden;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: 0.01em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px dashed var(--hot); outline-offset: 4px; border-radius: 8px; }
+
+/* progress bar */
+.progress { position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 8px; background: var(--bg-2); z-index: 50; }
+.progress i { display: block; height: 100%; width: 0%; background: repeating-linear-gradient(45deg, var(--pink) 0 10px, var(--hot) 10px 20px); border-radius: 0 8px 8px 0; transition: width .12s linear; }
+.progress b { position: absolute; top: -2px; left: 0; width: 22px; height: 22px; transform: translateX(-50%); transition: left .12s linear; filter: drop-shadow(0 2px 0 rgba(107,29,69,.25)); }
+
+/* floating hearts layer */
+.sky { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.fl { position: absolute; will-change: transform; }
+.fl svg { display: block; width: 100%; height: 100%; animation: bob var(--d, 6s) ease-in-out infinite alternate; animation-delay: var(--dl, 0s); }
+@keyframes bob { from { transform: translateY(-10px) rotate(-8deg) scale(.94); } to { transform: translateY(12px) rotate(8deg) scale(1.06); } }
+
+main { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; }
+section { padding-block: clamp(56px, 10vw, 120px); }
+
+/* hero */
+.hero { min-height: 560px; display: grid; place-items: center; text-align: center; padding-top: 96px; }
+.hero .tag { display: inline-block; background: var(--cream); border: 3px solid var(--ink); border-radius: 999px; padding: 6px 18px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; box-shadow: 4px 4px 0 var(--ink); transform: rotate(-3deg); }
+.hero h1 { font-size: clamp(56px, 14vw, 150px); color: var(--hot); margin-top: 28px; text-shadow: 4px 4px 0 var(--cream), 8px 8px 0 var(--ink); }
+.hero h1 span { display: inline-block; animation: wob 2.8s ease-in-out infinite; }
+.hero h1 span:nth-child(2n) { animation-delay: .35s; }
+.hero h1 span:nth-child(3n) { animation-delay: .7s; }
+@keyframes wob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
+.hero p { max-width: 34ch; margin: 28px auto 0; font-size: 20px; color: var(--ink-soft); font-weight: 700; }
+.hero .scrollcue { margin-top: 34px; display: inline-flex; align-items: center; gap: 10px; background: var(--hot); color: var(--cream); text-decoration: none; font-weight: 700; padding: 12px 24px; border-radius: 999px; border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); transition: transform .2s, box-shadow .2s; }
+.hero .scrollcue:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+.hero .scrollcue:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--ink); }
+.hero .scrollcue svg { width: 18px; height: 18px; animation: nudge 1.4s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateY(5px); } }
+
+/* marquee */
+.marquee { margin-inline: calc(50% - 50vw); overflow: hidden; background: var(--ink); color: var(--cream); padding: 14px 0; transform: rotate(-1.5deg); border-block: 3px solid var(--hot); position: relative; z-index: 3; }
+.marquee .track { display: flex; gap: 38px; width: max-content; animation: slide 28s linear infinite; font-family: var(--font-display); font-size: 26px; white-space: nowrap; }
+.marquee .track span { display: inline-flex; align-items: center; gap: 38px; }
+.marquee .track svg { width: 22px; height: 22px; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* story */
+.story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.story .stick { position: sticky; top: 90px; min-width: 0; }
+.eyebrow { font-weight: 700; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; color: var(--hot); }
+.story h2 { font-size: clamp(40px, 7vw, 76px); margin-top: 12px; }
+.story .stick p { margin-top: 18px; color: var(--ink-soft); max-width: 36ch; }
+.steps { display: grid; gap: 28px; min-width: 0; }
+.step { background: var(--cream); border: 3px solid var(--ink); border-radius: 28px; padding: 28px; box-shadow: 8px 8px 0 var(--pink); transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s; }
+.step h3 { font-size: 28px; color: var(--hot); display: flex; align-items: center; gap: 12px; }
+.step h3 svg { width: 30px; height: 30px; flex: none; }
+.step p { margin-top: 10px; color: var(--ink-soft); }
+.step:nth-child(even) { background: var(--bg-3); box-shadow: 8px 8px 0 var(--lilac); }
+.step.pre { transform: translateY(32px) rotate(1.2deg); opacity: .4; }
+
+/* horizontal row */
+.row-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 28px; }
+.row-head h2 { font-size: clamp(40px, 7vw, 72px); }
+.row-head p { color: var(--ink-soft); max-width: 32ch; font-weight: 700; }
+.snap { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 4px 34px; margin-inline: -4px; scrollbar-width: thin; scrollbar-color: var(--pink) var(--bg-2); }
+.snap::-webkit-scrollbar { height: 10px; }
+.snap::-webkit-scrollbar-track { background: var(--bg-2); border-radius: 10px; }
+.snap::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 10px; }
+.card { flex: 0 0 min(300px, 78vw); scroll-snap-align: center; border: 3px solid var(--ink); border-radius: 32px; padding: 26px; background: var(--cream); box-shadow: 6px 6px 0 var(--ink); display: flex; flex-direction: column; gap: 14px; transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+.card:hover { transform: translateY(-8px) rotate(-1.5deg); }
+.card .art { aspect-ratio: 1; border-radius: 22px; display: grid; place-items: center; border: 3px solid var(--ink); }
+.card .art svg { width: 62%; height: 62%; filter: drop-shadow(3px 3px 0 var(--ink)); }
+.card h3 { font-size: 28px; }
+.card p { color: var(--ink-soft); font-size: 16px; }
+.c1 .art { background: var(--pink); } .c2 .art { background: var(--lilac); } .c3 .art { background: #ffe9a8; } .c4 .art { background: #b8f0e0; } .c5 .art { background: var(--bg-3); }
+
+/* stickers */
+.wall { position: relative; border: 3px solid var(--ink); border-radius: 40px; background:
+  radial-gradient(circle at 1px 1px, var(--pink) 2px, transparent 2.5px) 0 0 / 28px 28px, var(--cream);
+  padding: clamp(28px, 6vw, 64px); display: grid; gap: 28px; justify-items: center; text-align: center; box-shadow: 10px 10px 0 var(--hot); overflow: hidden; }
+.wall h2 { font-size: clamp(36px, 6vw, 64px); background: var(--cream); padding: 4px 18px; border-radius: 18px; }
+.stickers { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; max-width: 700px; }
+.sticker { font: 700 17px var(--font-body); color: var(--ink); background: var(--bg-2); border: 3px solid var(--ink); border-radius: 999px; padding: 10px 20px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); transition: transform .15s, background .15s; }
+.sticker:hover { transform: rotate(-4deg) scale(1.06); background: var(--pink); }
+.sticker:active { transform: scale(.94); }
+.counter { font-family: var(--font-display); font-size: 22px; color: var(--hot); background: var(--cream); padding: 4px 16px; border-radius: 14px; }
+.counter b { font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* closing */
+.closing { text-align: center; padding-bottom: 140px; }
+.closing h2 { font-size: clamp(44px, 10vw, 110px); color: var(--hot); text-shadow: 3px 3px 0 var(--cream), 6px 6px 0 var(--ink); }
+.closing p { margin: 22px auto 0; max-width: 36ch; color: var(--ink-soft); font-weight: 700; font-size: 19px; }
+.totop { margin-top: 30px; display: inline-block; font: 700 17px var(--font-body); text-decoration: none; background: var(--cream); border: 3px solid var(--ink); border-radius: 999px; padding: 12px 26px; box-shadow: 4px 4px 0 var(--ink); transition: transform .2s; }
+.totop:hover { transform: translateY(-3px) rotate(-2deg); }
+
+/* cursor trail hearts */
+.trail { position: fixed; width: 18px; height: 18px; pointer-events: none; z-index: 60; animation: pop .9s ease-out forwards; }
+@keyframes pop { from { opacity: 1; transform: translate(-50%,-50%) scale(.6); } to { opacity: 0; transform: translate(-50%, calc(-50% - 50px)) scale(1.5) rotate(18deg); } }
+
+/* the big question */
+.closing { padding-bottom: 20px; }
+.ask { text-align: center; padding-bottom: 140px; }
+.ask .box { background: var(--cream); border: 3px solid var(--ink); border-radius: 40px; box-shadow: 10px 10px 0 var(--lilac); padding: clamp(28px, 6vw, 60px) clamp(16px, 4vw, 40px); display: grid; gap: 20px; justify-items: center; }
+.ask h2 { font-size: clamp(36px, 7vw, 76px); color: var(--hot); }
+.ask .sub { color: var(--ink-soft); font-weight: 700; max-width: 34ch; }
+.arena { position: relative; width: 100%; max-width: 640px; height: 230px; touch-action: manipulation; }
+.arena button { position: absolute; font: 400 24px var(--font-display); border: 3px solid var(--ink); border-radius: 999px; padding: 14px 34px; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); color: var(--ink); white-space: nowrap; }
+.yes { left: 50%; top: 50%; background: var(--hot); color: var(--cream) !important; transform: translate(-130%, -50%) scale(var(--grow, 1)); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.yes:hover { box-shadow: 6px 6px 0 var(--ink); }
+.no { background: var(--bg-3); left: 62%; top: 50%; transform: translateY(-50%); transition: left .32s cubic-bezier(.3,1.4,.5,1), top .32s cubic-bezier(.3,1.4,.5,1); }
+.arena.done .no { display: none; }
+.arena.done .yes { transform: translate(-50%, -50%) scale(1.25); }
+.ask .result { min-height: 1.6em; font-family: var(--font-display); font-size: 26px; color: var(--hot); }
+
+@media (max-width: 760px) {
+  .story { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .story .stick { position: static; }
+  body { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="h" viewBox="0 0 32 29"><path d="M16 28.5C7 21.5 1.5 16.5 1.5 9.6 1.5 5 4.9 1.5 9.2 1.5c2.9 0 5.3 1.5 6.8 4 1.5-2.5 3.9-4 6.8-4 4.3 0 7.7 3.5 7.7 8.1 0 6.9-5.5 11.9-14.5 18.9z" fill="currentColor" stroke="#6b1d45" stroke-width="2" stroke-linejoin="round"/><path d="M8 8.5c.6-1.7 2-2.7 3.6-2.7" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".75"/></symbol>
+    <symbol id="star" viewBox="0 0 32 32"><path d="M16 2l4.2 9.3L30 12.6l-7.2 6.8 1.9 9.8L16 24.6 7.3 29.2l1.9-9.8L2 12.6l9.8-1.3z" fill="currentColor" stroke="#6b1d45" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M12 4v15M5 13l7 7 7-7" stroke="currentColor" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="progress" aria-hidden="true"><i id="bar"></i><b id="barHeart" style="color:#ff3d8b"><svg viewBox="0 0 32 29" width="22" height="22"><use href="#h"/></svg></b></div>
+<div class="sky" id="sky" aria-hidden="true"></div>
+
+<main>
+  <section class="hero" id="top">
+    <div>
+      <span class="tag">made for nayah ♡</span>
+      <h1 aria-label="Pink Dreams"><span>P</span><span>i</span><span>n</span><span>k</span> <span>D</span><span>r</span><span>e</span><span>a</span><span>m</span><span>s</span></h1>
+      <p>a tiny website made of hearts, glitter thoughts and good vibes only</p>
+      <a class="scrollcue" href="#story">keep scrolling <svg viewBox="0 0 24 24"><use href="#arrow"/></svg></a>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track" id="track"></div>
+  </div>
+
+  <section class="story" id="story">
+    <div class="stick">
+      <span class="eyebrow">a short list</span>
+      <h2>things i like about you</h2>
+      <p>Keep scrolling, there are a few.</p>
+    </div>
+    <div class="steps">
+      <article class="step"><h3><svg viewBox="0 0 32 29" style="color:#ff6fa5"><use href="#h"/></svg>Your smile</h3><p>It makes a bad day better in about two seconds.</p></article>
+      <article class="step"><h3><svg viewBox="0 0 32 32" style="color:#ffd84d"><use href="#star"/></svg>Your laugh</h3><p>Contagious. I always end up laughing too, even when I missed the joke.</p></article>
+      <article class="step"><h3><svg viewBox="0 0 32 29" style="color:#d9b8ff"><use href="#h"/></svg>How kind you are</h3><p>You're nice to people without making a big deal out of it, and I notice.</p></article>
+      <article class="step"><h3><svg viewBox="0 0 32 32" style="color:#ff6fa5"><use href="#star"/></svg>Your vibe</h3><p>You're easy to be around. Time goes fast when you're there.</p></article>
+      <article class="step"><h3><svg viewBox="0 0 32 29" style="color:#ff3d8b"><use href="#h"/></svg>Just you</h3><p>Mostly that. The list could keep going.</p></article>
+    </div>
+  </section>
+
+  <section id="faves">
+    <div class="row-head">
+      <h2>date ideas</h2>
+      <p>swipe sideways and see if anything sounds fun</p>
+    </div>
+    <div class="snap" tabindex="0" aria-label="Date ideas">
+      <article class="card c1"><div class="art"><svg viewBox="0 0 32 29" style="color:#ff3d8b"><use href="#h"/></svg></div><h3>Sweet treats</h3><p>Ice cream, pink lemonade or whatever you pick. My treat.</p></article>
+      <article class="card c2"><div class="art"><svg viewBox="0 0 32 32" style="color:#fff"><use href="#star"/></svg></div><h3>Arcade night</h3><p>Games, prizes and me trying very hard to win you a plushie.</p></article>
+      <article class="card c3"><div class="art"><svg viewBox="0 0 32 29" style="color:#ffb3cf"><use href="#h"/></svg></div><h3>Movie night</h3><p>You pick the movie, I bring the snacks.</p></article>
+      <article class="card c4"><div class="art"><svg viewBox="0 0 32 32" style="color:#ff6fa5"><use href="#star"/></svg></div><h3>Night walk</h3><p>City lights, cold air and a good talk.</p></article>
+      <article class="card c5"><div class="art"><svg viewBox="0 0 32 29" style="color:#d9b8ff"><use href="#h"/></svg></div><h3>Your idea</h3><p>Got something better in mind? I'm in.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="wall">
+      <span class="eyebrow">interactive, press them</span>
+      <h2>sticker wall</h2>
+      <div class="stickers" id="stickers">
+        <button class="sticker" type="button">✨ main character</button>
+        <button class="sticker" type="button">🎀 soft girl era</button>
+        <button class="sticker" type="button">🍓 berry sweet</button>
+        <button class="sticker" type="button">💌 love letter</button>
+        <button class="sticker" type="button">🌸 bloom</button>
+        <button class="sticker" type="button">☁️ cloud brain</button>
+        <button class="sticker" type="button">🧸 cozy mode</button>
+        <button class="sticker" type="button">💖 big heart</button>
+      </div>
+      <div class="counter">hearts sent: <b id="count">0</b></div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2>you're so loved, nayah</h2>
+    <p>chabbe made this for you. thanks for scrolling all the way down.</p>
+    <a class="totop" href="#top">back to the top ♡</a>
+  </section>
+  <section class="ask" id="ask">
+    <div class="box">
+      <span class="eyebrow">one last thing</span>
+      <h2>nayah, will you go on a date with me?</h2>
+      <p class="sub">take your time. no pressure, chabbe is fine either way.</p>
+      <div class="arena" id="arena">
+        <button class="yes" id="yes" type="button">yes ♡</button>
+        <button class="no" id="no" type="button">no</button>
+      </div>
+      <p class="result" id="result" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var colors = ['#ff6fa5', '#ff3d8b', '#ffb3cf', '#d9b8ff', '#ff8fb8', '#ffd0e2'];
+
+  function heart(color) {
+    var s = document.createElementNS(NS, 'svg');
+    s.setAttribute('viewBox', '0 0 32 29');
+    s.style.color = color;
+    var u = document.createElementNS(NS, 'use');
+    u.setAttribute('href', '#h');
+    s.appendChild(u);
+    return s;
+  }
+
+  // floating hearts that drift with scroll (parallax)
+  var sky = document.getElementById('sky');
+  var floats = [];
+  var count = window.innerWidth < 600 ? 14 : 26;
+  for (var i = 0; i < count; i++) {
+    var el = document.createElement('div');
+    el.className = 'fl';
+    var size = 16 + Math.random() * 44;
+    el.style.width = size + 'px';
+    el.style.height = size * 0.9 + 'px';
+    el.style.left = Math.random() * 100 + '%';
+    el.style.top = Math.random() * 100 + '%';
+    el.style.opacity = (0.35 + Math.random() * 0.5).toFixed(2);
+    el.style.setProperty('--d', (4 + Math.random() * 5).toFixed(1) + 's');
+    el.style.setProperty('--dl', (-Math.random() * 6).toFixed(1) + 's');
+    el.appendChild(heart(colors[i % colors.length]));
+    sky.appendChild(el);
+    floats.push({ el: el, speed: 0.15 + Math.random() * 0.7, y: 0 });
+  }
+
+  // marquee
+  var words = ['hearts', 'sparkles', 'good vibes', 'cute stuff', 'pink pink pink', 'soft life', 'love'];
+  var track = document.getElementById('track');
+  var html = '';
+  for (var r = 0; r < 2; r++) {
+    html += '<span>';
+    words.forEach(function (w) {
+      html += w + '<svg viewBox="0 0 32 29" style="color:#ff6fa5"><use href="#h"/></svg>';
+    });
+    html += '</span>';
+  }
+  track.innerHTML = html;
+
+  // smooth scroll-driven motion
+  var bar = document.getElementById('bar');
+  var barHeart = document.getElementById('barHeart');
+  var target = 0, current = 0;
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    target = max > 0 ? window.scrollY / max : 0;
+  }
+  function frame() {
+    current += (target - current) * 0.12;
+    var pct = (current * 100).toFixed(2) + '%';
+    bar.style.width = pct;
+    barHeart.style.left = pct;
+    if (!reduce) {
+      var sy = window.scrollY;
+      for (var i = 0; i < floats.length; i++) {
+        var f = floats[i];
+        f.y += ((-sy * f.speed) - f.y) * 0.08;
+        f.el.style.transform = 'translate3d(0,' + f.y.toFixed(1) + 'px,0)';
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+  requestAnimationFrame(frame);
+
+  // gentle reveal for story steps below the fold (visible by default)
+  var steps = document.querySelectorAll('.step');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.remove('pre'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    steps.forEach(function (s) {
+      var rect = s.getBoundingClientRect();
+      if (rect.top > window.innerHeight) { s.classList.add('pre'); }
+      io.observe(s);
+    });
+  }
+
+  // heart burst
+  function burst(x, y, n) {
+    if (reduce) return;
+    for (var i = 0; i < n; i++) {
+      var t = document.createElement('div');
+      t.className = 'trail';
+      t.style.left = (x + (Math.random() - .5) * 60) + 'px';
+      t.style.top = (y + (Math.random() - .5) * 30) + 'px';
+      t.style.animationDuration = (0.7 + Math.random() * 0.7) + 's';
+      t.appendChild(heart(colors[Math.floor(Math.random() * colors.length)]));
+      document.body.appendChild(t);
+      setTimeout(function (el) { el.remove(); }.bind(null, t), 1500);
+    }
+  }
+
+  // cursor trail
+  var last = 0;
+  window.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    var now = performance.now();
+    if (now - last > 90) { last = now; burst(e.clientX, e.clientY, 1); }
+  });
+
+  // the question: the no button runs away
+  var arena = document.getElementById('arena');
+  var noBtn = document.getElementById('no');
+  var yesBtn = document.getElementById('yes');
+  var result = document.getElementById('result');
+  var dodges = 0;
+  var lines = ['nice try', 'too slow', 'nope', 'not today', 'catch me if you can', 'are you sure?', 'hehe'];
+
+  function dodge(px, py) {
+    var a = arena.getBoundingClientRect();
+    var w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+    var best = null, bestD = -1;
+    for (var i = 0; i < 14; i++) {
+      var x = Math.random() * (a.width - w);
+      var y = Math.random() * (a.height - h);
+      var cx = a.left + x + w / 2, cy = a.top + y + h / 2;
+      var d = (px == null) ? Math.random() : Math.hypot(cx - px, cy - py);
+      if (d > bestD) { bestD = d; best = { x: x, y: y }; }
+    }
+    noBtn.style.left = best.x + 'px';
+    noBtn.style.top = (best.y + h / 2) + 'px';
+    noBtn.style.transform = 'translateY(-50%)';
+    dodges += 1;
+    yesBtn.style.setProperty('--grow', Math.min(1 + dodges * 0.04, 1.4).toFixed(2));
+    result.textContent = lines[dodges % lines.length];
+  }
+
+  arena.addEventListener('pointermove', function (e) {
+    if (arena.classList.contains('done')) return;
+    var r = noBtn.getBoundingClientRect();
+    var d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+    if (d < 110) dodge(e.clientX, e.clientY);
+  });
+  noBtn.addEventListener('pointerdown', function (e) { e.preventDefault(); dodge(e.clientX, e.clientY); });
+  noBtn.addEventListener('click', function (e) { e.preventDefault(); dodge(); });
+  noBtn.addEventListener('focus', function () { dodge(); });
+
+  yesBtn.addEventListener('click', function () {
+    arena.classList.add('done');
+    result.textContent = 'yay!! chabbe is the happiest guy right now 💖';
+    var r = yesBtn.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 24);
+    setTimeout(function () { burst(r.left + r.width / 2, r.top, 18); }, 250);
+  });
+
+  // stickers
+  var total = 0;
+  var counter = document.getElementById('count');
+  document.getElementById('stickers').addEventListener('click', function (e) {
+    var b = e.target.closest('.sticker');
+    if (!b) return;
+    var r = b.getBoundingClientRect();
+    total += 1;
+    counter.textContent = total;
+    burst(r.left + r.width / 2, r.top + r.height / 2, 8);
+  });
+})();
+</script>
+
+</body>
+</html>
